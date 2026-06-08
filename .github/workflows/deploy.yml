@@ -1,0 +1,21 @@
+name: Deploy Script
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on:
+      - self-hosted
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Deploy Script
+        run: |
+          mkdir -p /home/idrac/scripts
+          cp download_idrac_catalog.sh /home/idrac/scripts/download_idrac_catalog.sh
+          chmod +x /home/idrac/scripts/download_idrac_catalog.sh
