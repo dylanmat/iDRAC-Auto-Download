@@ -28,7 +28,7 @@
 - A stale lock directory may need manual removal if the process is forcibly killed in a way that bypasses shell cleanup.
 
 ## Operational Integration Points
-- Source URL: `https://download.dell.com/catalog/Catalog.xml.gz`.
+- Source URL: `https://downloads.dell.com/catalog/Catalog.xml.gz`.
 - Default output directory: `./data`.
 - Deployment override: first script argument or `IDRAC_CATALOG_DIR`.
 - Optional URL override for testing or emergency use: `IDRAC_CATALOG_URL`.

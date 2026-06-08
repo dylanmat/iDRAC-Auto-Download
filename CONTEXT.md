@@ -6,7 +6,7 @@ iDRAC Auto Download keeps Dell's published iDRAC catalog available locally in bo
 ## Users & Stakeholders
 - Primary user: operator responsible for keeping the local iDRAC catalog current.
 - Technical owner: server administrator maintaining the Ubuntu cron job and FTP-served directory.
-- External dependency: Dell's public catalog endpoint at `https://download.dell.com/catalog/Catalog.xml.gz`.
+- External dependency: Dell's public catalog endpoint at `https://downloads.dell.com/catalog/Catalog.xml.gz`.
 
 ## Operational Context
 - Runtime environment: Ubuntu server running a daily cron job.
