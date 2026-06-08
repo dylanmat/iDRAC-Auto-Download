@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-CATALOG_URL="${IDRAC_CATALOG_URL:-https://download.dell.com/catalog/Catalog.xml.gz}"
+CATALOG_URL="${IDRAC_CATALOG_URL:-https://downloads.dell.com/catalog/Catalog.xml.gz}"
 OUTPUT_DIR="${1:-${IDRAC_CATALOG_DIR:-./data}}"
 
 GZ_FILE="${OUTPUT_DIR}/Catalog.xml.gz"

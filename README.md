@@ -3,7 +3,7 @@
 ## Overview
 This project provides a small Ubuntu cron utility that keeps a local copy of Dell's iDRAC catalog current.
 
-The script checks `https://download.dell.com/catalog/Catalog.xml.gz` using HTTP ETag metadata. When Dell publishes a new catalog, it downloads the compressed file, validates it, writes the decompressed XML, and atomically replaces the local files.
+The script checks `https://downloads.dell.com/catalog/Catalog.xml.gz` using HTTP ETag metadata. When Dell publishes a new catalog, it downloads the compressed file, validates it, writes the decompressed XML, and atomically replaces the local files.
 
 ## Output Files
 By default, files are written to `./data`:
