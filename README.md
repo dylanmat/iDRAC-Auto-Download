@@ -1,36 +1,76 @@
 # iDRAC Auto Download
 
 ## Overview
-Provide a high-level description of the project, its purpose, and expected outcome.
+This project provides a small Ubuntu cron utility that keeps a local copy of Dell's iDRAC catalog current.
 
-## Audience
-State who this project is for (for example: product team, platform team, external users).
+The script checks `https://download.dell.com/catalog/Catalog.xml.gz` using HTTP ETag metadata. When Dell publishes a new catalog, it downloads the compressed file, validates it, writes the decompressed XML, and atomically replaces the local files.
 
-## Core Capabilities
-- Capability 1:
-- Capability 2:
-- Capability 3:
+## Output Files
+By default, files are written to `./data`:
 
-## Quickstart
-1. Create env: `python -m venv .venv`
-2. Activate: `.venv\Scripts\Activate.ps1`
-3. Install: `pip install -r requirements.txt`
-4. Run tests: `pytest -q`
-5. Optional convenience scripts: `.\scripts\setup.ps1` and `.\scripts\test.ps1`
+- `Catalog.xml.gz`: compressed Dell catalog
+- `Catalog.xml`: decompressed Dell catalog
+- `Catalog.xml.gz.etag`: saved HTTP ETag used to detect updates
 
-## Template Bootstrap Checklist
-- Required docs exist at root (`README.md`, `CONTEXT.md`, `ARCHITECTURE.md`, `SECURITY.md`, `STANDARDS.md`, `DECISIONS.md`, `ROADMAP.md`, `CHANGELOG.md`, `AGENTS.md`).
-- Scaffold directories exist (`src/`, `tests/`, `prompts/`, `evals/`, `configs/`, `scripts/`).
-- Dependencies install successfully from `requirements.txt`.
-- Lint passes: `ruff check .`
-- Tests pass: `pytest -q`
-- Roadmap and changelog are updated for initial project scope.
+The output directory can be set with the first script argument or `IDRAC_CATALOG_DIR`.
+
+## Requirements
+Target runtime is Ubuntu with standard command-line tools:
+
+- `bash`
+- `curl`
+- `gzip`
+- `mktemp`
+- GNU coreutils
+
+No credentials are required. FTP pickup is handled outside this project by the Dell server or FTP service that reads the output directory.
+
+## Usage
+Run with the default `./data` output directory:
+
+```bash
+./scripts/download_idrac_catalog.sh
+```
+
+Run with an explicit FTP-served directory:
+
+```bash
+./scripts/download_idrac_catalog.sh /srv/ftp/idrac-catalog
+```
+
+Run with environment overrides:
+
+```bash
+IDRAC_CATALOG_DIR=/srv/ftp/idrac-catalog ./scripts/download_idrac_catalog.sh
+```
+
+## Cron Example
+Run daily at 2:15 AM and append logs to `/var/log/idrac-catalog-download.log`:
+
+```cron
+15 2 * * * /opt/idrac-auto-download/scripts/download_idrac_catalog.sh /srv/ftp/idrac-catalog >> /var/log/idrac-catalog-download.log 2>&1
+```
+
+## Verification
+Syntax check:
+
+```bash
+bash -n scripts/download_idrac_catalog.sh
+```
+
+Functional check against a temporary directory:
+
+```bash
+tmpdir="$(mktemp -d)"
+./scripts/download_idrac_catalog.sh "$tmpdir"
+ls -lh "$tmpdir"/Catalog.xml.gz "$tmpdir"/Catalog.xml
+```
 
 ## Documentation Map
-- Context and goals: `CONTEXT.md`
+- System context and goals: `CONTEXT.md`
 - Architecture and data flow: `ARCHITECTURE.md`
 - Security expectations: `SECURITY.md`
 - Coding/testing/review standards: `STANDARDS.md`
 - Decision history: `DECISIONS.md`
-- Planned milestones: `ROADMAP.md`
+- Planned work: `ROADMAP.md`
 - Release notes: `CHANGELOG.md`

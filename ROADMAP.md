@@ -1,52 +1,37 @@
 # ROADMAP
 
 ## Purpose
-Track project development priorities, sequencing, and delivery status.
+Track operational improvements for the iDRAC catalog downloader.
 
 ## Now
-### Baseline Template Hardening
-- Goal: finalize required root documentation and workflow consistency.
-- Status: In Progress
+### Initial Cron Downloader
+- Goal: provide a Bash script that keeps compressed and decompressed Dell catalog files current.
+- Status: Complete
 - Owner: Project Maintainers
-- Dependencies: None
-- Target Window: Current sprint
-- Success Criteria: All required docs exist with aligned ownership and update triggers.
-- Links: `AGENTS.md`, `CONTEXT.md`, `ARCHITECTURE.md`, `SECURITY.md`, `STANDARDS.md`
+- Dependencies: Dell public catalog endpoint
+- Success Criteria: Script downloads, validates, decompresses, and atomically replaces catalog files only when the remote ETag changes.
+- Links: `README.md`, `ARCHITECTURE.md`, `scripts/download_idrac_catalog.sh`
 
-### Quality Automation Foundation
-- Goal: add CI checks for lint and tests.
-- Status: Planned
+### Documentation Alignment
+- Goal: replace template documentation with project-specific operating guidance.
+- Status: Complete
 - Owner: Project Maintainers
-- Dependencies: baseline scripts and test entry points
-- Target Window: Next sprint
-- Success Criteria: CI runs `ruff check` and `pytest` on pull requests.
-- Links: `STANDARDS.md`, `CHANGELOG.md`
+- Dependencies: Initial downloader scope
+- Success Criteria: Root docs describe purpose, security boundaries, standards, architecture, and release history.
+- Links: `README.md`, `CONTEXT.md`, `SECURITY.md`, `STANDARDS.md`, `CHANGELOG.md`
 
 ## Next
-### Evaluation Harness
-- Goal: provide reusable eval execution and reporting baseline.
+### Deployment Validation
+- Goal: validate the cron entry and output directory permissions on the Ubuntu server.
 - Status: Planned
-- Owner: Project Maintainers
-- Dependencies: stable prompt/versioning conventions
-- Target Window: Near term
-- Success Criteria: template includes eval runner pattern and result reporting guidance.
-- Links: `ARCHITECTURE.md`, `STANDARDS.md`
-
-### Deployment and Runbook Baseline
-- Goal: define deployment/runbook scaffolding for downstream projects.
-- Status: Planned
-- Owner: Project Maintainers
-- Dependencies: quality automation foundation
-- Target Window: Near term
-- Success Criteria: templates include runbook expectations and operational handoff guidance.
-- Links: `SECURITY.md`, `STANDARDS.md`
+- Owner: Server Administrator
+- Dependencies: target FTP-served directory
+- Success Criteria: Daily cron run succeeds and downstream FTP pickup sees both catalog files.
 
 ## Later
-### Project Scaffolding Automation
-- Goal: automate setup for new projects from this template.
-- Status: Planned
-- Owner: Project Maintainers
-- Dependencies: stable documentation and workflow contract
-- Target Window: Longer term
-- Success Criteria: one-command bootstrap for docs, structure, and baseline scripts.
-- Links: `README.md`, `AGENTS.md`, `CHANGELOG.md`
+### Optional Monitoring
+- Goal: add lightweight alerting for repeated cron failures or stale catalog age.
+- Status: Backlog
+- Owner: Server Administrator
+- Dependencies: existing monitoring or log collection
+- Success Criteria: Operators are notified when the catalog has not updated or checked in as expected.

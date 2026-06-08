@@ -1,36 +1,29 @@
 # SECURITY
 
 ## Security Scope and Ownership
-- Define who owns security decisions and policy maintenance.
-- State which environments, services, and contributors this policy covers.
+This policy covers the catalog downloader script, its documentation, and the files it creates. The server administrator owns deployment security, cron configuration, filesystem permissions, and downstream FTP exposure.
 
 ## Credential Handling Policy
-- Store secrets only in approved secret stores or local `.env` files (never commit credentials).
-- Use least-privilege credentials and separate keys by environment.
-- Rotate credentials on schedule and immediately after suspected exposure.
-- Do not place tokens, API keys, or private credentials in logs, prompts, screenshots, or tickets.
+- The downloader does not require credentials.
+- Do not add FTP usernames, passwords, API keys, or private tokens to this repository.
+- If downstream FTP requires credentials, store and manage them in the FTP service configuration, not in this project.
 
 ## Data Access and Classification Policy
-- Define data classes (public, internal, sensitive, restricted) and handling rules for each.
-- Grant data access by role and minimum required scope.
-- Restrict direct production data access; prefer audited access paths.
-- Define retention/deletion expectations for logs, prompts, and model outputs.
-
-## AI Restrictions and Safety Boundaries
-- Define disallowed AI use cases and prohibited output categories.
-- Define allowed model/provider list and escalation path for exceptions.
-- Require validation/guardrails for model outputs before high-impact actions.
-- Define when human review is mandatory (for example legal, financial, safety-critical outputs).
+- Dell's catalog is public data downloaded from a public HTTPS endpoint.
+- Local output files may become operationally sensitive if the FTP directory layout exposes internal server details; limit directory permissions accordingly.
+- Logs should include operational status only and should not include secrets or private infrastructure details.
 
 ## Environment and Deployment Controls
-- Separate dev/stage/prod credentials, data, and access controls.
-- Require auditable change history for security-sensitive configuration.
-- Document baseline controls for network access, dependency updates, and runtime hardening.
+- Run the cron job as a least-privilege user that can write only to the intended output directory and log destination.
+- Serve only the intended catalog directory through FTP.
+- Keep the script and cron entry under normal change control.
+- Monitor failures through cron mail, log review, or existing server monitoring.
+
+## Supply Chain and Network Controls
+- Download only from Dell's HTTPS catalog URL unless a documented operational exception is needed.
+- Keep system packages such as `curl` and `gzip` updated through the server's normal patching process.
+- Failed validation must not replace the last known good catalog files.
 
 ## Incident Reporting and Response
-- Define vulnerability reporting channel and response ownership.
-- Define triage priorities and containment expectations.
-- Document communication and remediation follow-up requirements.
-
-## Compliance Notes
-List applicable regulatory, contractual, or internal compliance requirements.
+- Treat repeated download failures, unexpected output changes, or unauthorized FTP exposure as operational incidents.
+- Remove any exposed secrets from logs or documentation immediately and rotate affected credentials outside this repo.
